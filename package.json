@@ -11,6 +11,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "redis": "^4.7.0",
+    "ulid": "^2.3.0"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.5"
   }
 }
