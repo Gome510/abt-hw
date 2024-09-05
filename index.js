@@ -1,26 +1,24 @@
 import express from "express";
 import dotenv from "dotenv"
 import { createClient } from 'redis';
+import { ulid } from "ulid";
 
 dotenv.config()
-const {REDIS_URL, REDIS_KEY} = process.env;
+const { REDIS_URL } = process.env;
+const client = createClient ({url: REDIS_URL});
 
 const app = express()
 const port = 3000;
 
-
-const client = createClient({
-    password: REDIS_KEY,
-    socket: {
-        host: REDIS_URL,
-        port: 18810
-    }
-});
-
 app.use(express.json({limit: "10kb"}))
 
-app.get("/", (req, res) =>{
-  res.json({});
+app.get("/", async (req, res) =>{
+  try {
+    res.json({});
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({error: "Failed to get lotteries"})
+  }
 })
 
 app.post("/lotteries", async (req,res)=>{
@@ -41,7 +39,7 @@ app.post("/lotteries", async (req,res)=>{
     return;
   }
 
-  const id  = ulid.uild();
+  const id  = ulid();
   const newLottery = {
     id,
     name,
@@ -69,12 +67,3 @@ app.post("/lotteries", async (req,res)=>{
 app.listen(port, () =>{
   console.log(`Server listening on port ${port}`)
 })
-
-/* {
-  "id": "unique ID",
-  "name": "lottery name",
-  "type": "type of the lottery, there will be multiple types",
-  "prize": "Description of a prize, e.g. iPhone 13 Pro Max or $10000",
-  "status": "running or completed"
-  // depending on type there can be additional fields.
-} */
