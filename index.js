@@ -12,12 +12,22 @@ const port = 3000;
 
 app.use(express.json({limit: "10kb"}))
 
-app.get("/", async (req, res) =>{
+app.get("/lotteries", async (req, res) =>{
   try {
-    res.json({});
+    await client.connect()
+    const lotteryIds = await client.lRange("lotteries", 0, -1)
+    
+    const transaction = client.multi();
+    lotteryIds.forEach((id) => transaction.hGetAll(`lottery.${id}`));
+    const lotteries = await transaction.exec();
+    res.json({lotteries: lotteries})
+
   } catch (error) {
     console.error(error)
     res.status(500).json({error: "Failed to get lotteries"})
+
+  } finally {
+    client.disconnect()
   }
 })
 
@@ -55,12 +65,31 @@ app.post("/lotteries", async (req,res)=>{
       .hSet(`lottery.${id}`, newLottery)
       .lPush("lotteries", id)
       .exec();
-
-    await client.disconnect();
+    
     res.json(newLottery)
+
   } catch (error) {
     console.error(error)
     res.status(500).json({error: "Failed to create lottery"})
+  } finally {
+    await client.disconnect();
+  }
+})
+
+app.get("/lottery/:id", async (req,res)=>{
+  const id =  req.params.id;
+  try {
+    await client.connect();
+    const results = await client.multi().hGetAll(`lottery.${id}`).exec()
+    const lottery = results[0]
+    res.json(lottery)
+
+  } catch (error) {
+    console.error(error)
+    res.status(404).json({error: "Failed to get lottery"})
+
+  } finally {
+    await client.disconnect()
   }
 })
 
