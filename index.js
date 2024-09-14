@@ -93,6 +93,38 @@ app.get("/lottery/:id", async (req,res)=>{
   }
 })
 
+app.post("/register", async (req,res)=>{
+  const {lotteryId, name} = req.body;
+
+  if(!(lotteryId && name) || (typeof lotteryId !== "string" || typeof name !== "string")){
+    res.status(400).json({error: "lotteryId and name must be strings"})
+    return
+  }
+
+  try {
+    await client.connect()
+    const lotteryStatus = await client.multi().hGet(`lottery.${lotteryId}`, "status").exec()
+  
+    if(!lotteryStatus){
+      throw new Error("Lottery not found")
+    }
+    
+    if( lotteryStatus === "finished"){
+      throw new Error("Lottery finished")
+    }
+
+    await client.lPush(`lottery.${lotteryId}.participants`, name);
+    res.json({ status: "Success"})
+
+  } catch (error) {
+    console.error(error);
+    res.status(404).json({error: "Registration failed: " + error.message})
+
+  } finally {
+    await client.disconnect()
+  }
+})
+
 app.listen(port, () =>{
   console.log(`Server listening on port ${port}`)
 })
