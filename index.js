@@ -2,6 +2,11 @@ import express from "express";
 import dotenv from "dotenv"
 import { createClient } from 'redis';
 import { ulid } from "ulid";
+import cors from "cors" 
+
+if (process.env.NODE_ENV === "development") {
+  app.use(cors());
+}
 
 dotenv.config()
 const { REDIS_URL } = process.env;
