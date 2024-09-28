@@ -4,11 +4,12 @@ import { createClient } from 'redis';
 import { ulid } from "ulid";
 import cors from "cors" 
 
+dotenv.config()
+
 if (process.env.NODE_ENV === "development") {
   app.use(cors());
 }
 
-dotenv.config()
 const { REDIS_URL } = process.env;
 const client = createClient ({url: REDIS_URL});
 
