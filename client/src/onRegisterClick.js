@@ -9,13 +9,4 @@ export async function onRegisterClick() {
   // 2. Obtain the user's name from the `nameInput` element.
   // 3. Check status of the lottery checkboxes using the `checked` property.
 
-  checkboxes.forEach((checkbox) => {
-    if(checkbox.checked) {
-      const lotteryId = checkbox.id;
-      try {
-        const response = await fetch()
-      }
-    }
-  })
-
 }
