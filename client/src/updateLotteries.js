@@ -61,7 +61,12 @@ function updateLottery(lottery) {
 }
 
 export async function updateLotteries() {
-  // TODO: Obtain the lottery data from the GET /lotteries endpoint.
-  // 1. Use the `fetch` API to make the request.
-  // 2. Update each lottery using the `updateLottery` function above.
+  try{
+    const response = await fetch("http://localhost:5173/lotteries");
+    const lotteries = await response.json();
+
+    lotteries.forEach((lottery) => updateLottery(lottery))
+  } catch(error) {
+    console.error("Error updating lotteries:", error.message)
+  }
 }
