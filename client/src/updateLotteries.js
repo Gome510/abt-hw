@@ -62,7 +62,7 @@ function updateLottery(lottery) {
 
 export async function updateLotteries() {
   try{
-    const response = await fetch("http://localhost:5173/lotteries");
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/lotteries`);
     const lotteries = await response.json();
 
     lotteries.forEach((lottery) => updateLottery(lottery))
