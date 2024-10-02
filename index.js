@@ -131,6 +131,11 @@ app.post("/register", async (req,res)=>{
   }
 })
 
+if (process.env.NODE_ENV === "production") {
+  // Serving the bundled frontend code together with the backend on the same port in production.
+  app.use(express.static("client/dist"));
+}
+
 app.listen(port, () =>{
   console.log(`Server listening on port ${port}`)
 })
