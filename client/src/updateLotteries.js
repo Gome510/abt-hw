@@ -64,8 +64,13 @@ export async function updateLotteries() {
   try{
     const response = await fetch(`${import.meta.env.VITE_API_URL}/lotteries`);
     const lotteries = await response.json();
+    console.log("New lottery data:", lotteries);
 
-    lotteries.forEach((lottery) => updateLottery(lottery))
+    lotteries.forEach((lottery) => updateLottery(lottery));
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
   } catch(error) {
     console.error("Error updating lotteries:", error.message)
   }
