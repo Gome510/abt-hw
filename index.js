@@ -26,7 +26,7 @@ app.get("/lotteries", async (req, res) =>{
     const transaction = client.multi();
     lotteryIds.forEach((id) => transaction.hGetAll(`lottery.${id}`));
     const lotteries = await transaction.exec();
-    res.json({lotteries: lotteries})
+    res.json(lotteries)
 
   } catch (error) {
     console.error(error)
