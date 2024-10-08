@@ -1,10 +1,11 @@
 export async function onRegisterClick() {
-  const name = document.getElementById("name").value;
-  const nameInput = document.getElementById("name");
-  const checkboxes = Array.from(
+  const nameInput = document.getElementById("name") as HTMLInputElement;
+  if(!nameInput) return;
+
+  const name = nameInput ? nameInput.value : "";
+  const checkboxes : HTMLInputElement[] = Array.from(
     document.querySelectorAll("input[type=checkbox]")
   );
-
   const isAnyChecked = checkboxes.some((checkbox)=> checkbox.checked);
 
   if(name && isAnyChecked) {
@@ -30,8 +31,12 @@ export async function onRegisterClick() {
 
         nameInput.value = "";
         alert(`Successfully registered ${name} for the selected lotteries!`);
-      } catch (error) {
-        console.error("Error registering for lotteries:", error.message )
+      } catch (error ) {
+        if (error instanceof Error) {
+          console.error("Error registering for lotteries:", error.message);
+        } else {
+          console.error("Error registering for lotteries:", error);
+        }
       }
     }
   }

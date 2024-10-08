@@ -7,10 +7,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-client": "cd client && npm run build ",
-    "build:babel": "babel index.js -d build-babel --extensions '.ts'",
-    "build:tsc": "tsc index.js --outDir build-tsc",
-    "dev": "NODE_ENV=development nodemon --exec ts-node -r dotenv/config index.js",
+    "build:babel": "babel index.ts -d build-babel --extensions '.ts'",
+    "build:tsc": "tsc index.ts --outDir build-tsc",
+    "dev": "NODE_ENV=development nodemon --exec ts-node -r dotenv/config index.ts",
     "prod": "npm run build-client && NODE_ENV=production ts-node -r dotenv/config index.js",
+    "lint": "eslint .",
     "check-types": "tsc --noEmit",
     "finalize-lottery": "node scripts/finalizeLottery.js"
   },
@@ -18,16 +19,23 @@
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "redis": "^4.7.0",
-    "ulid": "^2.3.0"
+    "ulid": "^2.3.0",
+    "vite-plugin-checker": "^0.8.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.25.7",
     "@babel/core": "^7.25.7",
     "@babel/preset-typescript": "^7.25.7",
+    "@callstack/eslint-config": "^15.0.0",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
     "@types/node": "^22.7.5",
-    "dotenv": "^16.4.5",
+    "@typescript-eslint/eslint-plugin": "^8.8.1",
+    "eslint": "8.57",
+    "eslint-plugin-jest": "^28.8.3",
     "nodemon": "^3.1.7",
     "random": "^5.1.0",
     "ts-node": "^10.9.2",
