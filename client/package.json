@@ -1,16 +1,17 @@
 {
   "name": "bigcorp-lotteries-client",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": " vite",
     "tsc-build": "tsc --noEmit --watch",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
-    "typescript": "^5.6.2",
-    "vite": "^5.4.1"
+    "typescript": "^5.0.2",
+    "vite": "^4.3.9",
+    "vite-plugin-checker": "^0.6.1"
   }
 }

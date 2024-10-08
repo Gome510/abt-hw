@@ -1,44 +1,39 @@
 {
-  "name": "abt-1-hw",
+  "name": "bigcorp-lotteries-api",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build-client": "cd client && npm run build ",
-    "build:babel": "babel index.ts -d build-babel --extensions '.ts'",
-    "build:tsc": "tsc index.ts --outDir build-tsc",
-    "dev": "NODE_ENV=development nodemon --exec ts-node -r dotenv/config index.ts",
-    "prod": "npm run build-client && NODE_ENV=production ts-node -r dotenv/config index.js",
-    "lint": "eslint .",
+    "build:babel": "babel server.ts -d build-babel --extensions '.ts'",
+    "build:tsc": "tsc server.ts --outDir build-tsc",
+    "dev": "NODE_ENV=development nodemon --exec ts-node -r dotenv/config server.ts",
+    "prod": "npm run build-client && NODE_ENV=production ts-node -r dotenv/config server.js",
     "check-types": "tsc --noEmit",
-    "finalize-lottery": "node scripts/finalizeLottery.js"
+    "finalize-lottery": "node -r dotenv/config scripts/finalizeLottery.mjs",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint --ext .ts . "
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "redis": "^4.7.0",
-    "ulid": "^2.3.0",
-    "vite-plugin-checker": "^0.8.0"
+    "express": "^4.18.2",
+    "random": "^4.1.0",
+    "redis": "^4.6.7",
+    "ulid": "^2.3.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.25.7",
-    "@babel/core": "^7.25.7",
-    "@babel/preset-typescript": "^7.25.7",
-    "@callstack/eslint-config": "^15.0.0",
-    "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
-    "@types/node": "^22.7.5",
-    "@typescript-eslint/eslint-plugin": "^8.8.1",
-    "eslint": "8.57",
-    "eslint-plugin-jest": "^28.8.3",
-    "nodemon": "^3.1.7",
-    "random": "^5.1.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.6.2"
+    "@babel/cli": "^7.22.5",
+    "@babel/core": "^7.22.5",
+    "@babel/preset-typescript": "^7.22.5",
+    "@callstack/eslint-config": "^13.0.2",
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.3.1",
+    "dotenv": "^16.1.4",
+    "eslint": "^8.43.0",
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.3"
   }
 }

@@ -1,11 +1,14 @@
-import { onRegisterClick } from "./src/onRegisterClick.ts";
-import { updateLotteries } from "./src/updateLotteries.ts";
+import { onRegisterClick } from './src/onRegisterClick';
+import { updateLotteries } from './src/updateLotteries';
 
-const POLLING_INTERVAL_IN_MS = 10000;
+const POLLING_INVERVAL_IN_MS = 10_000;
 
-const registerButton: HTMLElement | null = document.getElementById("register");
-if(registerButton) registerButton.onclick = onRegisterClick;
+const registerButton: HTMLElement | null = document.getElementById('register');
 
-updateLotteries();
+if (registerButton) {
+  registerButton.onclick = onRegisterClick;
+}
 
-setInterval(()=> updateLotteries(), POLLING_INTERVAL_IN_MS);
+updateLotteries(); // Initial lottery data fetch
+
+setInterval(() => updateLotteries(), POLLING_INVERVAL_IN_MS); // Setting up data polling

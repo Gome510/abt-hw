@@ -1,7 +1,7 @@
-import { Lottery } from "../../types";
+import { Lottery } from '../../types';
 
 interface AppState {
-  lotteries: Map<string, Lottery>
+  lotteries: Map<string, Lottery>;
 }
 
 export const appState: AppState = {

@@ -1,7 +1,9 @@
-export type Lottery = {
+export type Status = 'running' | 'finished';
+
+export interface Lottery {
+  id: string;
   name: string;
   prize: string;
-  status: string;
   type: string;
-  id: string;
-};
+  status: Status;
+}
