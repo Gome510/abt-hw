@@ -45,7 +45,7 @@ function App() {
   }
   function handlePrizeChange(e: eventTarget) {
     const value = e.target.value;
-    setName(value);
+    setPrize(value);
     if (value.length < 4) {
       setPrizeErr(true);
     } else {
@@ -89,7 +89,12 @@ function App() {
                 required
               />
 
-              <Button sx={{ width: '60px' }} type="submit" variant="contained">
+              <Button
+                sx={{ width: '60px' }}
+                type="submit"
+                variant="contained"
+                disabled={prizeErr || nameErr || prize === '' || name === ''}
+              >
                 Add
               </Button>
             </Stack>
