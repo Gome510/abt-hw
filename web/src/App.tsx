@@ -23,12 +23,35 @@ const style = {
   p: 4,
 };
 
+type eventTarget = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
+
 function App() {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [prize, setPrize] = useState('');
+  const [nameErr, setNameErr] = useState(false);
+  const [prizeErr, setPrizeErr] = useState(false);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  function handleNameChange(e: eventTarget) {
+    const value = e.target.value;
+    setName(value);
+    if (value.length < 4) {
+      setNameErr(true);
+    } else {
+      setNameErr(false);
+    }
+  }
+  function handlePrizeChange(e: eventTarget) {
+    const value = e.target.value;
+    setName(value);
+    if (value.length < 4) {
+      setPrizeErr(true);
+    } else {
+      setPrizeErr(false);
+    }
+  }
 
   return (
     <div>
@@ -43,8 +66,28 @@ function App() {
 
           <form>
             <Stack spacing={2}>
-              <TextField variant="standard" label="Lottery name" required />
-              <TextField variant="standard" label="Lottery prize" required />
+              <TextField
+                variant="standard"
+                label="Lottery name"
+                onChange={(e) => handleNameChange(e)}
+                error={nameErr}
+                defaultValue={name}
+                helperText={
+                  nameErr && 'Name must be at least 4 characters long'
+                }
+                required
+              />
+              <TextField
+                variant="standard"
+                label="Lottery prize"
+                onChange={(e) => handlePrizeChange(e)}
+                error={prizeErr}
+                defaultValue={prize}
+                helperText={
+                  prizeErr && 'Prize must be at least 4 characters long'
+                }
+                required
+              />
 
               <Button sx={{ width: '60px' }} type="submit" variant="contained">
                 Add
