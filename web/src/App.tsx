@@ -3,6 +3,8 @@ import './App.css';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
+import { LoadingButton } from '@mui/lab';
+import { useNotifications, NotificationsProvider } from '@toolpad/core';
 
 type eventTarget = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
 
@@ -31,9 +33,24 @@ function App() {
   const [prize, setPrize] = useState('');
   const [nameErr, setNameErr] = useState(false);
   const [prizeErr, setPrizeErr] = useState(false);
+  const [formLoading, setFormLoading] = useState(false);
+
+  const notifications = useNotifications();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setFormLoading(true);
+    setTimeout(() => {
+      setFormLoading(false);
+      handleClose();
+      notifications.show('New lottery added', {
+        severity: 'success',
+        autoHideDuration: 3000,
+      });
+    }, 2000);
+  }
   function handleNameChange(e: eventTarget) {
     const value = e.target.value;
     setName(value);
@@ -66,7 +83,7 @@ function App() {
             Add a new lottery
           </Typography>
 
-          <form>
+          <form onSubmit={handleSubmit}>
             <Stack spacing={2}>
               <TextField
                 variant="standard"
@@ -91,14 +108,15 @@ function App() {
                 required
               />
 
-              <Button
+              <LoadingButton
                 sx={{ width: '60px' }}
                 type="submit"
                 variant="contained"
                 disabled={isSubmitDisabled}
+                loading={formLoading}
               >
                 Add
-              </Button>
+              </LoadingButton>
             </Stack>
           </form>
         </Box>
