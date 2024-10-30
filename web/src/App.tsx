@@ -4,6 +4,8 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 
+type eventTarget = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
+
 const AddLotteryButton = styled(Button)({
   borderRadius: '9999px',
   position: 'absolute',
@@ -22,8 +24,6 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
-
-type eventTarget = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -52,6 +52,8 @@ function App() {
       setPrizeErr(false);
     }
   }
+
+  const isSubmitDisabled = prizeErr || nameErr || prize === '' || name === '';
 
   return (
     <div>
@@ -93,7 +95,7 @@ function App() {
                 sx={{ width: '60px' }}
                 type="submit"
                 variant="contained"
-                disabled={prizeErr || nameErr || prize === '' || name === ''}
+                disabled={isSubmitDisabled}
               >
                 Add
               </Button>
