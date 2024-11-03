@@ -27,7 +27,12 @@ const style = {
   p: 4,
 };
 
-function AddLottery() {
+const baseUrl = 'http://localhost:3000';
+interface AddLotteryProps {
+  fetchLotteries: () => Promise<void>;
+}
+
+function AddLottery({ fetchLotteries }: AddLotteryProps) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [prize, setPrize] = useState('');
@@ -45,14 +50,33 @@ function AddLottery() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setFormLoading(true);
-    setTimeout(() => {
-      setFormLoading(false);
-      handleClose();
+    try {
+      void fetch(`${baseUrl}/lotteries`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'simple',
+          name: name,
+          prize: prize,
+        }),
+      });
+      fetchLotteries();
       notifications.show('New lottery added', {
         severity: 'success',
         autoHideDuration: 3000,
       });
-    }, 2000);
+    } catch (error) {
+      console.error(error);
+      notifications.show('Lottery could not be added', {
+        severity: 'error',
+        autoHideDuration: 3000,
+      });
+    } finally {
+      setFormLoading(false);
+      handleClose();
+    }
   }
   function handleNameChange(e: eventTarget) {
     const value = e.target.value;

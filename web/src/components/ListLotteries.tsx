@@ -1,31 +1,24 @@
-import React, { useEffect, useState } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import SyncIcon from '@mui/icons-material/Sync';
 import { type Lottery } from '../../../backend/types';
-import { Box, Button, IconButton, Typography } from '@mui/material';
+import { Box, IconButton, Typography } from '@mui/material';
 
-const baseUrl = 'http://localhost:3000';
-function ListLotteries() {
-  const [lotteries, setLotteries] = useState<Lottery[]>([]);
-
-  useEffect(() => {
-    async function fetchLotteries() {
-      try {
-        const response = await fetch(`${baseUrl}/lotteries`);
-        const data = (await response.json()) as Lottery[];
-        setLotteries(data);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
-    void fetchLotteries();
-  }, []);
-
+interface ListLotteriesProps {
+  lotteries: Lottery[];
+}
+function ListLotteries({ lotteries }: ListLotteriesProps) {
   return (
     //TODO: Responsive column count
-    <Box maxWidth={900}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        maxWidth: 950,
+        gap: 2,
+      }}
+    >
       {lotteries
         ? lotteries.map((lottery) => <LotteryCard lottery={lottery} />)
         : 'ListLotteries'}
@@ -40,7 +33,7 @@ interface LotteryCardProps {
 }
 function LotteryCard({ lottery }: LotteryCardProps) {
   return (
-    <Card sx={{ width: 400 }}>
+    <Card sx={{ minWidth: 300, maxWidth: 300 }}>
       <CardContent sx={{ position: 'relative' }}>
         <IconButton
           color="inherit"
