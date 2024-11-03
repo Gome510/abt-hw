@@ -26,4 +26,4 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'off',
     'prettier/prettier': 'error',
   },
-}
+};
