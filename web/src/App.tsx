@@ -10,6 +10,9 @@ const baseUrl = 'http://localhost:3000';
 
 function App() {
   const [lotteries, setLotteries] = useState<Lottery[]>([]);
+  const [selectedLotteries, setSelectedLotteries] = useState<{
+    [id: string]: boolean;
+  }>({});
 
   async function fetchLotteries() {
     try {
@@ -19,6 +22,12 @@ function App() {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  function handleSelect(id: string) {
+    setSelectedLotteries((prev) => {
+      return { ...prev, [id]: !prev[id] };
+    });
   }
 
   useEffect(() => {
@@ -38,7 +47,11 @@ function App() {
           Lotteries{' '}
           <CasinoIcon fontSize="inherit" sx={{ verticalAlign: 'middle' }} />
         </Typography>
-        <ListLotteries lotteries={lotteries} />
+        <ListLotteries
+          lotteries={lotteries}
+          handleSelect={handleSelect}
+          selectedLotteries={selectedLotteries}
+        />
         <AddLottery fetchLotteries={fetchLotteries} />
       </Box>
     </Container>
