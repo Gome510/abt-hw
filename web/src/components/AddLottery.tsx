@@ -47,11 +47,12 @@ function AddLottery({ fetchLotteries }: AddLotteryProps) {
 
   const isSubmitDisabled = prizeErr || nameErr || prize === '' || name === '';
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setFormLoading(true);
+    let response = null;
     try {
-      void fetch(`${baseUrl}/lotteries`, {
+      response = await fetch(`${baseUrl}/lotteries`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -62,18 +63,21 @@ function AddLottery({ fetchLotteries }: AddLotteryProps) {
           prize: prize,
         }),
       });
-      fetchLotteries();
-      notifications.show('New lottery added', {
-        severity: 'success',
-        autoHideDuration: 3000,
-      });
+      void fetchLotteries();
     } catch (error) {
       console.error(error);
-      notifications.show('Lottery could not be added', {
-        severity: 'error',
-        autoHideDuration: 3000,
-      });
     } finally {
+      if (response && response.ok) {
+        notifications.show('New lottery added', {
+          severity: 'success',
+          autoHideDuration: 3000,
+        });
+      } else {
+        notifications.show('Lottery could not be added', {
+          severity: 'error',
+          autoHideDuration: 3000,
+        });
+      }
       setFormLoading(false);
       handleClose();
     }
@@ -108,7 +112,7 @@ function AddLottery({ fetchLotteries }: AddLotteryProps) {
             Add a new lottery
           </Typography>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={void handleSubmit}>
             <Stack spacing={2}>
               <TextField
                 variant="standard"
