@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Box, Container, Typography } from '@mui/material';
 import CasinoIcon from '@mui/icons-material/Casino';
+import { OutlinedInput } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import AddLottery from './components/AddLottery';
 import ListLotteries from './components/ListLotteries';
 import { type Lottery } from '../../backend/types';
@@ -9,11 +11,14 @@ import Register from './components/Register';
 
 const baseUrl = 'http://localhost:3000';
 
+type eventTarget = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
+
 function App() {
   const [lotteries, setLotteries] = useState<Lottery[]>([]);
   const [selectedLotteries, setSelectedLotteries] = useState<{
     [id: string]: boolean;
   }>({});
+  const [search, setSearch] = useState('');
 
   async function fetchLotteries() {
     try {
@@ -35,6 +40,10 @@ function App() {
     });
   }
 
+  function handleSearchChange(e: eventTarget) {
+    setSearch(e.target.value);
+  }
+
   useEffect(() => {
     void fetchLotteries();
   }, []);
@@ -52,10 +61,18 @@ function App() {
           Lotteries{' '}
           <CasinoIcon fontSize="inherit" sx={{ verticalAlign: 'middle' }} />
         </Typography>
+        <OutlinedInput
+          sx={{ marginY: 4, minWidth: 400 }}
+          placeholder="Search"
+          defaultValue={search}
+          onChange={handleSearchChange}
+          endAdornment={<SearchIcon />}
+        />
         <ListLotteries
           lotteries={lotteries}
           handleSelect={handleSelect}
           selectedLotteries={selectedLotteries}
+          search={search}
         />
         <AddLottery fetchLotteries={fetchLotteries} />
         <Register

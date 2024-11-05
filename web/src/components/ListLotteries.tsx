@@ -2,21 +2,25 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import SyncIcon from '@mui/icons-material/Sync';
 import { type Lottery } from '../../../backend/types';
-import { Box, CardActions, IconButton, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import CardActionArea from '@mui/material/CardActionArea';
 
 interface ListLotteriesProps {
   lotteries: Lottery[];
   selectedLotteries: { [key: string]: boolean };
   handleSelect: (id: string) => void;
+  search: string;
 }
 function ListLotteries({
   lotteries,
   selectedLotteries,
   handleSelect,
+  search,
 }: ListLotteriesProps) {
+  const filteredLotteries = lotteries.filter((lottery) =>
+    lottery.name.toLowerCase().includes(search.toLowerCase()),
+  );
   return (
-    //TODO: Responsive column count
     <Box
       sx={{
         display: 'flex',
@@ -26,15 +30,19 @@ function ListLotteries({
         gap: 2,
       }}
     >
-      {lotteries
-        ? lotteries.map((lottery) => (
-            <LotteryCard
-              selected={selectedLotteries[lottery.id]}
-              lottery={lottery}
-              handleSelect={handleSelect}
-            />
-          ))
-        : 'ListLotteries'}
+      {filteredLotteries.length > 0 ? (
+        filteredLotteries.map((lottery) => (
+          <LotteryCard
+            selected={selectedLotteries[lottery.id]}
+            lottery={lottery}
+            handleSelect={handleSelect}
+          />
+        ))
+      ) : (
+        <Typography variant="h5">
+          No search results found for '{search}'
+        </Typography>
+      )}
     </Box>
   );
 }
@@ -51,6 +59,7 @@ function LotteryCard({ lottery, selected, handleSelect }: LotteryCardProps) {
   const cardStyle = {
     minWidth: 300,
     maxWidth: 300,
+    maxHeight: 110,
     position: 'relative',
     ...(selected && { outline: '2px solid black' }),
     ...(!lotteryRunning && { opacity: 0.5 }),
@@ -58,14 +67,10 @@ function LotteryCard({ lottery, selected, handleSelect }: LotteryCardProps) {
 
   return (
     <Card sx={cardStyle}>
-      {/* <CardActions>
-        <IconButton color="inherit">
-          <SyncIcon />
-        </IconButton>
-      </CardActions> */}
       {lotteryRunning ? (
         <CardActionArea onClick={() => handleSelect(lottery.id)}>
           <CardContent>
+            <SyncIcon sx={{ position: 'absolute', right: 10 }} />
             <Typography variant="h5" align="left">
               {lottery.name}
             </Typography>
