@@ -5,6 +5,7 @@ import AddLottery from './components/AddLottery';
 import ListLotteries from './components/ListLotteries';
 import { type Lottery } from '../../backend/types';
 import './App.css';
+import Register from './components/Register';
 
 const baseUrl = 'http://localhost:3000';
 
@@ -26,7 +27,11 @@ function App() {
 
   function handleSelect(id: string) {
     setSelectedLotteries((prev) => {
-      return { ...prev, [id]: !prev[id] };
+      if (!prev[id]) {
+        return { ...prev, [id]: true };
+      }
+      const { [id]: _, ...rest } = prev;
+      return rest;
     });
   }
 
@@ -53,6 +58,11 @@ function App() {
           selectedLotteries={selectedLotteries}
         />
         <AddLottery fetchLotteries={fetchLotteries} />
+        <Register
+          fetchLotteries={fetchLotteries}
+          lotteries={lotteries}
+          selectedLotteries={selectedLotteries}
+        />
       </Box>
     </Container>
   );

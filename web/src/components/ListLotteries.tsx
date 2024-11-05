@@ -47,11 +47,13 @@ interface LotteryCardProps {
   handleSelect: (id: string) => void;
 }
 function LotteryCard({ lottery, selected, handleSelect }: LotteryCardProps) {
+  const lotteryRunning = lottery.status === 'running';
   const cardStyle = {
     minWidth: 300,
     maxWidth: 300,
     position: 'relative',
     ...(selected && { outline: '2px solid black' }),
+    ...(!lotteryRunning && { opacity: 0.5 }),
   };
 
   return (
@@ -61,7 +63,17 @@ function LotteryCard({ lottery, selected, handleSelect }: LotteryCardProps) {
           <SyncIcon />
         </IconButton>
       </CardActions> */}
-      <CardActionArea onClick={() => handleSelect(lottery.id)}>
+      {lotteryRunning ? (
+        <CardActionArea onClick={() => handleSelect(lottery.id)}>
+          <CardContent>
+            <Typography variant="h5" align="left">
+              {lottery.name}
+            </Typography>
+            <Typography align="left"> {lottery.prize} </Typography>
+            <Typography align="left"> {lottery.id} </Typography>
+          </CardContent>
+        </CardActionArea>
+      ) : (
         <CardContent>
           <Typography variant="h5" align="left">
             {lottery.name}
@@ -69,7 +81,7 @@ function LotteryCard({ lottery, selected, handleSelect }: LotteryCardProps) {
           <Typography align="left"> {lottery.prize} </Typography>
           <Typography align="left"> {lottery.id} </Typography>
         </CardContent>
-      </CardActionArea>
+      )}
     </Card>
   );
 }
