@@ -123,7 +123,11 @@ function Register({
             Register for a lottery
           </Typography>
 
-          <form onSubmit={void handleSubmit}>
+          <form
+            onSubmit={(e) => {
+              void handleSubmit(e);
+            }}
+          >
             <Stack spacing={2}>
               <TextField
                 variant="standard"
