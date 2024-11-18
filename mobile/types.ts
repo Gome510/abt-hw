@@ -1,4 +1,4 @@
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type Status = 'running' | 'finished';
 
@@ -19,3 +19,8 @@ export type AddLotteryNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'AddLottery'
 >;
+
+export type AddLotteryFormValues = {
+  name: string;
+  prize: string;
+};
