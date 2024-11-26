@@ -118,7 +118,7 @@ app.post(
         .lPush('lotteries', id)
         .exec();
 
-      console.log('res', res);
+      //console.log('res', res);
 
       res.json(newLottery);
     } catch (error) {

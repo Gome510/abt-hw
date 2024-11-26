@@ -1,7 +1,8 @@
 import { createStaticNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from './src/screens/HomeScreen';
-import AddLotteryScreen from './src/screens/AddLotteryScreen';
+import { ToastProvider } from 'react-native-toast-notifications';
+import HomeScreen from './screens/HomeScreen';
+import AddLotteryScreen from './screens/AddLotteryScreen';
 
 const RootStack = createNativeStackNavigator({
   screens: {
@@ -13,5 +14,9 @@ const RootStack = createNativeStackNavigator({
 const Navigation = createStaticNavigation(RootStack);
 
 export default function App() {
-  return <Navigation />;
+  return (
+    <ToastProvider>
+      <Navigation />
+    </ToastProvider>
+  );
 }

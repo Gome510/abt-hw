@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
-import { AddLotteryNavigationProp } from '../../types';
+import { AddLotteryNavigationProp } from '../types';
 
 export default function HomeScreen() {
   const { navigate } = useNavigation<AddLotteryNavigationProp>();
