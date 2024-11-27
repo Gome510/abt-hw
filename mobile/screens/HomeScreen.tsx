@@ -3,9 +3,12 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { AddLotteryNavigationProp } from '../types';
+import LotteryList from '../components/LotteryList';
+import useLotteries from '../hooks/useLotteries';
 
 export default function HomeScreen() {
   const { navigate } = useNavigation<AddLotteryNavigationProp>();
+  const { lotteries, loading, error, fetchLotteries } = useLotteries();
 
   return (
     <View style={styles.container}>
@@ -13,6 +16,8 @@ export default function HomeScreen() {
         <Text style={styles.title}>Lotteries</Text>
         <MaterialIcons size={40} name="casino" color="black" />
       </View>
+
+      <LotteryList lotteries={lotteries} loading={loading} />
       <Pressable
         style={styles.fabButton}
         onPress={() => navigate('AddLottery')}
