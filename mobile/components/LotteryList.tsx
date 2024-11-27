@@ -27,7 +27,7 @@ export default function LotteryList({ lotteries, loading }: Props) {
   );
 
   return (
-    <View style={{ width: width - 24 }}>
+    <View style={{ width: width - 24, flex: 1 }}>
       <View style={styles.filterContainer}>
         <TextInput
           style={styles.filter}

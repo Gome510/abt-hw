@@ -9,6 +9,13 @@ const RootStack = createNativeStackNavigator({
     Home: HomeScreen,
     AddLottery: AddLotteryScreen,
   },
+  screenOptions: {
+    headerShown: false,
+    contentStyle: {
+      paddingTop: 40,
+      backgroundColor: 'white',
+    },
+  },
 });
 
 const Navigation = createStaticNavigation(RootStack);

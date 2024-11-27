@@ -1,7 +1,8 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { useEffect } from 'react';
 import { AddLotteryNavigationProp } from '../types';
 import LotteryList from '../components/LotteryList';
 import useLotteries from '../hooks/useLotteries';
@@ -9,6 +10,13 @@ import useLotteries from '../hooks/useLotteries';
 export default function HomeScreen() {
   const { navigate } = useNavigation<AddLotteryNavigationProp>();
   const { lotteries, loading, error, fetchLotteries } = useLotteries();
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      fetchLotteries();
+    }
+  }, [isFocused]);
 
   return (
     <View style={styles.container}>

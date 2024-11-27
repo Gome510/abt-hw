@@ -1,7 +1,6 @@
 import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useToast } from 'react-native-toast-notifications';
-import { AddLotteryNavigationProp, AddLotteryFormValues } from '../types';
 import LotteryForm from '../components/Form';
 
 const AddLotteryScreen = () => {
@@ -14,7 +13,7 @@ const AddLotteryScreen = () => {
   }
 
   return (
-    <View>
+    <View style={{ paddingTop: 20 }}>
       <LotteryForm onSubmit={onSubmit} />
     </View>
   );
