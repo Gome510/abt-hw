@@ -4,8 +4,10 @@ import {
   FlatList,
   ActivityIndicator,
   useWindowDimensions,
+  TextInput,
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet } from 'react-native';
 import { Lottery } from '../types';
 import { colors } from '../colors';
@@ -16,15 +18,33 @@ type Props = {
 };
 
 export default function LotteryList({ lotteries, loading }: Props) {
+  const [filter, setFilter] = useState('');
   const { width } = useWindowDimensions();
   if (loading) return <ActivityIndicator size={'large'} />;
 
+  const filteredLotteries = lotteries.filter((lottery) =>
+    lottery.name.includes(filter),
+  );
+
   return (
-    <FlatList
-      style={{ width: width - 24 }}
-      data={lotteries}
-      renderItem={LotteryItem}
-    />
+    <View style={{ width: width - 24 }}>
+      <View style={styles.filterContainer}>
+        <TextInput
+          style={styles.filter}
+          placeholder="Filter lotteries"
+          onChangeText={setFilter}
+        />
+        <Ionicons name="search" size={24} color="black" />
+      </View>
+      {filteredLotteries.length > 0 ? (
+        <FlatList
+          data={filter ? filteredLotteries : lotteries}
+          renderItem={LotteryItem}
+        />
+      ) : (
+        <Text style={styles.noResult}>No search results for `{filter}`</Text>
+      )}
+    </View>
   );
 }
 
@@ -69,5 +89,27 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 24,
     marginTop: 16,
+  },
+  filter: {
+    flex: 1,
+    height: 40,
+    fontSize: 16,
+    paddingRight: 10,
+  },
+  filterContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 24,
+    marginHorizontal: 40,
+    borderWidth: 1,
+    borderRadius: 4,
+    borderColor: colors.grey,
+    backgroundColor: colors.secondary,
+    paddingHorizontal: 23,
+  },
+  noResult: {
+    color: 'black',
+    fontSize: 24,
+    textAlign: 'center',
   },
 });
