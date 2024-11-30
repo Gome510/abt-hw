@@ -5,12 +5,15 @@ import {
   ActivityIndicator,
   useWindowDimensions,
   TextInput,
+  Pressable,
+  Button,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet } from 'react-native';
 import { Lottery } from '../types';
 import { colors } from '../colors';
+import RegisterButton from './RegisterButton';
 
 type Props = {
   lotteries: Lottery[];
@@ -19,7 +22,19 @@ type Props = {
 
 export default function LotteryList({ lotteries, loading }: Props) {
   const [filter, setFilter] = useState('');
+  const selected = useRef<{ [key: string]: boolean }>({});
+  const [registerButtonVisible, setRegisterButtonVisible] = useState(false);
   const { width } = useWindowDimensions();
+
+  const handleSelect = (id: string) => {
+    if (selected.current[id]) {
+      delete selected.current[id];
+    } else {
+      selected.current[id] = true;
+    }
+    setRegisterButtonVisible(Object.keys(selected.current).length > 0);
+  };
+
   if (loading) return <ActivityIndicator size={'large'} />;
 
   const filteredLotteries = lotteries.filter((lottery) =>
@@ -28,6 +43,8 @@ export default function LotteryList({ lotteries, loading }: Props) {
 
   return (
     <View style={{ width: width - 24, flex: 1 }}>
+      <RegisterButton visible={registerButtonVisible} />
+
       <View style={styles.filterContainer}>
         <TextInput
           style={styles.filter}
@@ -39,7 +56,9 @@ export default function LotteryList({ lotteries, loading }: Props) {
       {filteredLotteries.length > 0 ? (
         <FlatList
           data={filter ? filteredLotteries : lotteries}
-          renderItem={LotteryItem}
+          renderItem={({ item }) => (
+            <LotteryItem item={item} handleSelect={handleSelect} />
+          )}
         />
       ) : (
         <Text style={styles.noResult}>No search results for `{filter}`</Text>
@@ -48,13 +67,31 @@ export default function LotteryList({ lotteries, loading }: Props) {
   );
 }
 
-function LotteryItem({ item }: { item: Lottery }) {
+function LotteryItem({
+  item,
+  handleSelect,
+}: {
+  item: Lottery;
+  handleSelect: (id: string) => void;
+}) {
+  const [selected, setSelected] = useState(false);
+  const styleContainer = {
+    ...styles.container,
+    borderColor: selected ? 'blue' : colors.borderColor,
+  };
+
   return (
-    <View style={styles.container}>
+    <Pressable
+      style={styleContainer}
+      onPress={() => {
+        handleSelect(item.id);
+        setSelected((prev) => !prev);
+      }}
+    >
       <Text style={styles.name}>{item.name}</Text>
       <Text style={styles.prize}>{item.prize}</Text>
       <Text style={styles.id}>{item.id}</Text>
-    </View>
+    </Pressable>
   );
 }
 
