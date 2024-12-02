@@ -1,31 +1,32 @@
 import { useEffect, useState } from 'react';
 import { Lottery } from '../types';
-import { getLottieries } from '../services/lottery';
+import * as LotteryService from '../services/lottery';
 
 export default function useLotteries() {
-  const [lotteries, setLotteries] = useState<Lottery[]>([]);
+  const [lotteries, setLotteries] = useState<Array<Lottery>>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState();
+  const [error, setError] = useState<string>();
 
-  async function fetchLotteries() {
+  const fetchLotteries = async () => {
     setLoading(true);
     setError(undefined);
+
     try {
-      const lotteryList = await getLottieries();
+      const lotteriesData = await LotteryService.getLottieries();
       setLoading(false);
-      setLotteries(lotteryList);
-    } catch (error: any) {
+      setLotteries(lotteriesData);
+    } catch (e: any) {
       setLoading(false);
-      setError(error.message);
+      setError(e.message);
     }
-  }
+  };
 
   useEffect(() => {
     fetchLotteries();
   }, []);
 
   return {
-    lotteries,
+    data: lotteries,
     loading,
     error,
     fetchLotteries,

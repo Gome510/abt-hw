@@ -1,29 +1,33 @@
+import React from 'react';
 import {
   View,
   Text,
-  StyleSheet,
-  ActivityIndicator,
-  Pressable,
   TextInput,
+  StyleSheet,
+  Pressable,
+  ActivityIndicator,
 } from 'react-native';
-import React from 'react';
-import * as Yup from 'yup';
 import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import useLotteryRegister from '../hooks/useLotteryRegister';
 import { colors } from '../colors';
-import useRegisterLottery from '../hooks/useRegisterLottery';
 import { RegisterScreenRouteProp } from '../types';
 
 const registerSchema = Yup.object({
-  name: Yup.string().required().min(4),
+  name: Yup.string().min(4).required(),
 });
 
-export default function RegisterModal() {
-  const { loading, error, registerToLotteries } = useRegisterLottery();
+const RegisterModal = () => {
+  const { error, loading, registerToLotteries } = useLotteryRegister();
   const route = useRoute<RegisterScreenRouteProp>();
   const navigation = useNavigation();
 
-  const selectedLotteries = route.params.selectedLotteries;
+  const selectedLotteries = route.params?.selectedLotteries;
+
+  const handleClose = () => {
+    navigation.goBack();
+  };
 
   const formik = useFormik({
     validationSchema: registerSchema,
@@ -32,16 +36,11 @@ export default function RegisterModal() {
     initialValues: {
       name: '',
     },
-    onSubmit: async (values) => {
-      await registerToLotteries({
-        name: values.name,
-        lotteries: selectedLotteries,
-      });
-      navigation.goBack();
+    onSubmit: async ({ name }) => {
+      await registerToLotteries({ name, lotteries: selectedLotteries });
+      handleClose();
     },
   });
-  const nameError = formik.errors.name;
-  const nameTouched = formik.touched.name;
 
   const backgroundColor = !formik.isValid
     ? colors.grey
@@ -49,45 +48,46 @@ export default function RegisterModal() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Register for lotteries</Text>
+      <Text style={styles.title}>Register to lotteries</Text>
       <TextInput
         accessibilityLabel="Text input field"
-        style={styles.input}
-        placeholder="Lottery Name"
-        value={formik.values.name}
+        placeholder="Enter your name"
         onChangeText={formik.handleChange('name')}
         onBlur={formik.handleBlur('name')}
+        value={formik.values.name}
+        style={styles.input}
       />
-      {nameError && nameTouched && (
-        <Text style={styles.error}>{nameError}</Text>
-      )}
-
+      {formik.touched.name && formik.errors.name ? (
+        <Text>{formik.errors.name}</Text>
+      ) : null}
       <Pressable
         accessibilityRole="button"
         style={[styles.button, { backgroundColor }]}
-        onPress={() => {
-          formik.handleSubmit();
-        }}
+        onPress={() => formik.handleSubmit()}
         disabled={!formik.isValid}
       >
         {loading ? (
           <ActivityIndicator />
         ) : (
-          <Text style={styles.buttonText}>ADD</Text>
+          <Text style={styles.buttonText}>Register</Text>
         )}
       </Pressable>
       {error ? <Text style={styles.error}>error</Text> : null}
     </View>
   );
-}
+};
+
+export default RegisterModal;
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 20,
+    backgroundColor: colors.secondary,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
-    fontSize: 20,
-    fontWeight: '500',
+    fontSize: 24,
   },
   input: {
     marginTop: 16,
@@ -96,15 +96,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.grey,
     fontSize: 16,
-  },
-  error: {
-    fontSize: 10,
-    color: colors.danger,
-    paddingTop: 8,
+    width: 300,
   },
   button: {
     marginTop: 32,
-    width: 64,
+    width: 120,
     borderRadius: 4,
     paddingVertical: 12,
     alignItems: 'center',
@@ -113,5 +109,10 @@ const styles = StyleSheet.create({
     color: colors.secondary,
     fontSize: 16,
     fontWeight: '600',
+  },
+  error: {
+    fontSize: 10,
+    color: colors.danger,
+    paddingTop: 8,
   },
 });

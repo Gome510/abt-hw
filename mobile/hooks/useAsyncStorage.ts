@@ -1,9 +1,10 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 
 const STORAGE_KEY = '@selectedLotteries';
 
-export default function useAsyncStorage() {
+const useAsyncStorage = () => {
   const [storedData, setStoredData] = useState<string[]>();
   const storeData = async (newSelectedIds: string[]) => {
     try {
@@ -12,8 +13,8 @@ export default function useAsyncStorage() {
       existedData.push(...newSelectedIds);
       const updatedJsonValue = JSON.stringify(existedData);
       await AsyncStorage.setItem(STORAGE_KEY, updatedJsonValue);
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -32,8 +33,10 @@ export default function useAsyncStorage() {
   }, []);
 
   return {
-    data: storedData,
+    storedData,
     storeData,
     getStoredData,
   };
-}
+};
+
+export default useAsyncStorage;

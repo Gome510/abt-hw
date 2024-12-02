@@ -1,6 +1,8 @@
+import { Platform } from 'react-native';
+// eslint-disable-next-line import/no-unresolved
 import { Lottery } from '../types';
 
-const API_URL = 'http://localhost:3000';
+const API_URL = 'http://localhost:3000'
 
 export async function createNewLottery({
   name,

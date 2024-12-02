@@ -1,6 +1,5 @@
+import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
 export type Status = 'running' | 'finished';
 
 export interface Lottery {
@@ -11,25 +10,16 @@ export interface Lottery {
   status: Status;
 }
 
+// navigation types
 export type RootStackParamList = {
   Home: undefined;
   AddLottery: undefined;
   Register: { selectedLotteries: Array<string> };
 };
 
-export type AddLotteryNavigationProp = NativeStackNavigationProp<
+export type AddLotteryNavigationProp = StackNavigationProp<
   RootStackParamList,
   'AddLottery',
-  'Register'
->;
-
-export type AddLotteryFormValues = {
-  name: string;
-  prize: string;
-};
-
-export type RegisterNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
   'Register'
 >;
 
