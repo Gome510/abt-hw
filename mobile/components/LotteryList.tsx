@@ -11,16 +11,24 @@ import {
 import React, { useRef, useState } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet } from 'react-native';
-import { Lottery } from '../types';
+import { useNavigation } from '@react-navigation/native';
+import { Lottery, RegisterNavigationProp } from '../types';
 import { colors } from '../colors';
-import RegisterButton from './RegisterButton';
 
 type Props = {
   lotteries: Lottery[];
   loading: boolean;
+  registeredLotteries: string[];
 };
 
-export default function LotteryList({ lotteries, loading }: Props) {
+export default function LotteryList({
+  lotteries,
+  loading,
+  registeredLotteries,
+}: Props) {
+  if (loading) return <ActivityIndicator size={'large'} />;
+
+  const { navigate } = useNavigation<RegisterNavigationProp>();
   const [filter, setFilter] = useState('');
   const selected = useRef<{ [key: string]: boolean }>({});
   const [registerButtonVisible, setRegisterButtonVisible] = useState(false);
@@ -35,7 +43,9 @@ export default function LotteryList({ lotteries, loading }: Props) {
     setRegisterButtonVisible(Object.keys(selected.current).length > 0);
   };
 
-  if (loading) return <ActivityIndicator size={'large'} />;
+  const handleRegister = () => {
+    navigate('Register', { selectedLotteries: Object.keys(selected.current) });
+  };
 
   const filteredLotteries = lotteries.filter((lottery) =>
     lottery.name.includes(filter),
@@ -43,8 +53,9 @@ export default function LotteryList({ lotteries, loading }: Props) {
 
   return (
     <View style={{ width: width - 24, flex: 1 }}>
-      <RegisterButton visible={registerButtonVisible} />
-
+      {registerButtonVisible ? (
+        <Button title="Register" onPress={handleRegister} />
+      ) : null}
       <View style={styles.filterContainer}>
         <TextInput
           style={styles.filter}
@@ -53,12 +64,20 @@ export default function LotteryList({ lotteries, loading }: Props) {
         />
         <Ionicons name="search" size={24} color="black" />
       </View>
+
       {filteredLotteries.length > 0 ? (
         <FlatList
           data={filter ? filteredLotteries : lotteries}
-          renderItem={({ item }) => (
-            <LotteryItem item={item} handleSelect={handleSelect} />
-          )}
+          renderItem={({ item }) => {
+            const registered = registeredLotteries?.includes(item.id);
+            return (
+              <LotteryItem
+                item={item}
+                handleSelect={handleSelect}
+                registered={registered}
+              />
+            );
+          }}
         />
       ) : (
         <Text style={styles.noResult}>No search results for `{filter}`</Text>
@@ -70,14 +89,18 @@ export default function LotteryList({ lotteries, loading }: Props) {
 function LotteryItem({
   item,
   handleSelect,
+  registered,
 }: {
   item: Lottery;
   handleSelect: (id: string) => void;
+  registered?: boolean;
 }) {
   const [selected, setSelected] = useState(false);
   const styleContainer = {
     ...styles.container,
     borderColor: selected ? 'blue' : colors.borderColor,
+    backgroundColor:
+      item.status !== 'running' || registered ? '#E0E0E0' : 'white',
   };
 
   return (
@@ -87,6 +110,7 @@ function LotteryItem({
         handleSelect(item.id);
         setSelected((prev) => !prev);
       }}
+      disabled={item.status !== 'running' || registered}
     >
       <Text style={styles.name}>{item.name}</Text>
       <Text style={styles.prize}>{item.prize}</Text>

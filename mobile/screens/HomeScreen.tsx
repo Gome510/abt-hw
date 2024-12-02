@@ -6,15 +6,19 @@ import { useEffect } from 'react';
 import { AddLotteryNavigationProp } from '../types';
 import LotteryList from '../components/LotteryList';
 import useLotteries from '../hooks/useLotteries';
+import useAsyncStorage from '../hooks/useAsyncStorage';
 
 export default function HomeScreen() {
   const { navigate } = useNavigation<AddLotteryNavigationProp>();
   const { lotteries, loading, error, fetchLotteries } = useLotteries();
+  const { getStoredData, data } = useAsyncStorage();
+
   const isFocused = useIsFocused();
 
   useEffect(() => {
     if (isFocused) {
       fetchLotteries();
+      getStoredData();
     }
   }, [isFocused]);
 
@@ -25,7 +29,11 @@ export default function HomeScreen() {
         <MaterialIcons size={40} name="casino" color="black" />
       </View>
 
-      <LotteryList lotteries={lotteries} loading={loading} />
+      <LotteryList
+        lotteries={lotteries}
+        loading={loading}
+        registeredLotteries={data || []}
+      />
       <Pressable
         style={styles.fabButton}
         onPress={() => navigate('AddLottery')}
