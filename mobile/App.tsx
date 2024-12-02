@@ -9,6 +9,7 @@ import Home from './screens/Home';
 import AddLottery from './screens/AddLottery';
 import RegisterModal from './screens/RegisterModal';
 import { RootStackParamList } from './types';
+import LotteryDetails from './screens/LotteryDetails';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -31,6 +32,9 @@ export default function App() {
           </Stack.Group>
           <Stack.Group screenOptions={{ presentation: 'modal' }}>
             <Stack.Screen name="Register" component={RegisterModal} />
+          </Stack.Group>
+          <Stack.Group>
+            <Stack.Screen name="LotteryDetails" component={LotteryDetails} />
           </Stack.Group>
         </Stack.Navigator>
       </NavigationContainer>
