@@ -30,3 +30,8 @@ export type LotteryDetailsNavigationProp = StackNavigationProp<
   RootStackParamList,
   'LotteryDetails'
 >;
+
+export type LotteryDetailsRouteProp = RouteProp<
+  RootStackParamList,
+  'LotteryDetails'
+>;
